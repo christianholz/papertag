@@ -12,8 +12,8 @@ import bibtexparser
 # path_prefix = ''
 path_prefix = 'cgi-bin/'
 
-
 extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done']
+tagdb_config = None
 
 
 def fcopy(fn, tn):
@@ -85,4 +85,16 @@ def save_paper(pid, data, user):
     f = open(path_prefix + 'tags/' + md5.md5(pid).hexdigest() + '.json', 'w')
     json.dump(data, f)
     f.close()
+
+
+def auth(form):
+    if tagdb_config == None:
+        load_config()
+    if 'user' in form:
+        user = form.getvalue('user')
+    else:
+        return False
+    if user not in tagdb_config['users']:
+        return False
+    return user
 

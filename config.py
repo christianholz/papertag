@@ -9,16 +9,14 @@ import tagdb
 
 print "Content-type: text/html\r\n"
 
+
 config = tagdb.load_config()
 form = cgi.FieldStorage()
-if 'user' in form:
-    user = form.getvalue('user')
-else:
-    print '''error: user not set'''
+user = tagdb.auth(form)
+if not user:
+    print '''error: user'''
     sys.exit(-1)
-if user not in config['users']:
-    print '''error: unknown user'''
-    sys.exit(-1)
+
 if 'edit' in form:
     edit = form.getvalue('edit')
 else:
@@ -30,6 +28,7 @@ if not edit in [v[0].lower() for v in config['edit']] or os.path.splitext(edit)[
     sys.exit(-1)
 edit = [v[0].lower() for v in config['edit']].index(edit)
 ed_tp = config['edit'][edit]
+
 
 print '''<!DOCTYPE html>
 <html>
@@ -55,6 +54,6 @@ print '''<h1>Edit %s</h1>
 <textarea name="config_raw" id="config_raw">'''% (ed_tp[1], user, ed_tp[0])
 print "".join(ls)
 print '''</textarea>
-<input type="submit" id="submit" name="submit" value="update %s" onclick="javascript:return confirm('overwrite %s ?');"/>
+<input type="submit" id="submit" name="submit" value="update %s" onclick="javascript:return confirm('overwrite %s?');"/>
 </form>
 </body>''' % (ed_tp[1], ed_tp[1])

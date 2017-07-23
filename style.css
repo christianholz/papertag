@@ -22,6 +22,7 @@ nav {
     font-family: monospace;
     font-size: 10pt;
     display: block;
+    white-space: pre;
 }
 
 #submit {
@@ -59,7 +60,7 @@ h1 {
 }
 
 textarea {
-    width: 500px;
+    width: 99%;
     height: 200px;
 }
 
@@ -89,3 +90,4 @@ label {
 .taglinks {
     min-width: 200px;
 }
+

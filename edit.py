@@ -9,23 +9,19 @@ import tagdb
 
 print "Content-type: text/html\r\n"
 
+
 config = tagdb.load_config()
 form = cgi.FieldStorage()
-if 'user' in form:
-    user = form.getvalue('user')
-else:
-    print '''error: user not set'''
+user = tagdb.auth(form)
+if not user:
+    print '''error: user'''
     sys.exit(-1)
-if user not in config['users']:
-    print '''error: unknown user'''
-    sys.exit(-1)
+
 if 'pid' in form:
     pid = form.getvalue('pid')
 else:
     print '''error: paper not set'''
     sys.exit(-1)
-
-
 
 if 'submit' in form:
     # they really have the oldest Py2 installation
@@ -40,10 +36,9 @@ else:
 
 
 papers = tagdb.parse_bibtex()
-
-paper = None
+paper  = None
 for item in papers:
-    if item[0] == pid:
+    if item['pid'] == pid:
         paper = item
         break
 if paper == None:
@@ -60,13 +55,14 @@ print '''<!DOCTYPE html>
 <nav><a href="list.py?user=%s">&lt; list</a></nav>
 %s
 <h1>%s</h1>
+<a href="https://dx.doi.org/%s">doi link</a>
 <form action="edit.py?user=%s&pid=%s" method="post">
 <table>
 <tr>
     <th class="nexp">field</th>
     <th class="exp">value</th>
     <th class="taglinks">default values</th>
-</tr>''' % (paper[1], user, msg, paper[1], user, pid)
+</tr>''' % (paper['title'], user, msg, paper['title'], paper['doi'], user, pid)
 
 pdata = tagdb.load_paper(pid)
 
@@ -90,6 +86,12 @@ def gen_field(st, indent=0):
 
         if len(s[4]):
             gen_field(s[4], indent + 1)
+
+print '''<tr>
+    <td class="nexp">Bibtex raw</td>
+    <td class="exp"><textarea id="bibtex" disabled="disabled" style="font-family:monospace;font-size:10pt;white-space:pre;background-color:#eee">%s</textarea></td>
+    <td class="taglinks"></td>
+</tr>''' % (''.join(paper['bibtex']))
 
 gen_field(config['fields'])
 gen_field([['pid_assigned', "Assigned to", 'line', config['users'], []]])

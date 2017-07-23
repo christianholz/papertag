@@ -9,23 +9,21 @@ import tagdb
 
 print "Content-type: text/html\r\n"
 
+
 config = tagdb.load_config()
 form = cgi.FieldStorage()
-if 'user' in form:
-    user = form.getvalue('user')
-else:
-    print '''error: user not set'''
+user = tagdb.auth(form)
+if not user:
+    print '''error: user'''
     sys.exit(-1)
-if user not in config['users']:
-    print '''error: unknown user'''
-    sys.exit(-1)
-
-filtered = 'filter' in form and int(form.getvalue('filter'))
 
 if 'done' in form:
     done = int(form.getvalue('done'))
 else:
     done = 1
+
+filtered = 'filter' in form and int(form.getvalue('filter'))
+
 
 papers = tagdb.parse_bibtex()
 
@@ -61,6 +59,7 @@ print '''<!DOCTYPE html>
 <table>
 <tr>
     <th class="exp">title</th>
+    <th class="nexp">doi</th>
     <th class="nexp">action</th>
     <th class="nexp">assigned</th>
     <th class="nexp">last change</th>
@@ -71,7 +70,7 @@ print '''<!DOCTYPE html>
 
 cnt = 0
 for item in papers:
-    m = tagdb.get_meta(item[0])
+    m = tagdb.get_meta(item['pid'])
     if (not filtered or m[0] == user) and (m[3] >= done):
         if m[0] == '':
             bgc = ' style="background-color:#fcc"'
@@ -84,12 +83,13 @@ for item in papers:
         cnt += 1
         print '''<tr>
         <td class="exp">%s</td>
+        <td class="nexp"%s><a href="https://dx.doi.org/%s">link</a></td>
         <td class="nexp"%s><a href="edit.py?user=%s&pid=%s">edit</a></td>
         <td class="nexp"%s%s>%s</td>
         <td class="nexp"%s>%s</td>
         <td class="nexp"%s>%s</td>
         <td class="nexp"%s>%s</td>
-    </tr>''' % (item[1], unf, user, item[0], bgc, unf, m[0], unf, m[2], unf, m[1], unf, config['done'][m[3]])
+    </tr>''' % (item['title'], unf, item['doi'], unf, user, item['pid'], bgc, unf, m[0], unf, m[2], unf, m[1], unf, config['done'][m[3]])
 
 if cnt == 0:
     print '''<tr>
