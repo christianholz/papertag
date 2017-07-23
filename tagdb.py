@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import json
+import md5
+import time
+import datetime
+import bibtexparser
+
+
+# path_prefix = ''
+path_prefix = 'cgi-bin/'
+
+
+extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done']
+
+
+def fcopy(fn, tn):
+    f = open(tn, 'w')
+    for l in open(fn):
+        f.write(l)
+    f.close()
+    
+
+def parse_bibtex():
+    return bibtexparser.parse_file(path_prefix + 'all.bib')
+
+
+def get_meta(pid):
+    try:
+        f = open(path_prefix + 'tags/' + md5.md5(pid).hexdigest() + '.json')
+    except IOError:
+        return ['', '', datetime.datetime(2000, 1, 1), 1]
+    j = json.load(f)
+    f.close()
+    j['pid_access'] = datetime.datetime.fromtimestamp(j['pid_access'])
+    j['pid_done'] = int(j['pid_done'])
+    j = [j.get(v, '') for v in extra_fields]
+    return j
+
+
+def load_config():
+    global tagdb_config
+    tagdb_config = json.load(open(path_prefix + 'config.json'))
+    return tagdb_config
+
+
+def save_file(fname, raw):
+    global tagdb_config
+    fc = os.path.splitext(fname)
+    if not fname in [v[0].lower() for v in tagdb_config['edit']] or fc[1].lower() == '.py':
+        return "file not in edit list"
+    if fc[1] == '.json':
+        t = json.loads(raw)
+    if fc[1] == '.bib':
+        b = bibtexparser.parse_lines(raw.split('\n'))
+        d = bibtexparser.duplicate(b)
+        if d:
+            return "duplicate entry " + d
+    fcopy(path_prefix + fname, path_prefix + 'backup/' + fc[0] + '-' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + fc[1])
+    open(path_prefix + fname, 'w').write(raw)
+
+
+def load_file_raw(fname):
+    if not fname in [v[0].lower() for v in tagdb_config['edit']] or os.path.splitext(fname)[1].lower() == '.py':
+        return []
+    else:
+        return open(path_prefix + fname).readlines()
+
+
+def load_paper(pid):
+    try:
+        f = open(path_prefix + 'tags/' + md5.md5(pid).hexdigest() + '.json')
+    except IOError:
+        return {}
+    j = json.load(f)
+    f.close()
+    return j
+
+
+def save_paper(pid, data, user):
+    data['pid_access'] = time.mktime(datetime.datetime.now().timetuple())
+    data['pid_user'] = user
+    f = open(path_prefix + 'tags/' + md5.md5(pid).hexdigest() + '.json', 'w')
+    json.dump(data, f)
+    f.close()
+

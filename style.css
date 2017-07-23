@@ -1,0 +1,91 @@
+html,body,table,tbody{
+    background-color:#fff;
+    color:#333;
+    margin:0;
+    padding:0;
+    font:10pt/10pt Helvetica,Arial,sans-serif;
+}
+
+body {
+	padding: 15px;
+}
+
+nav {
+    padding: 10px 0;
+    margin-bottom: 10px;
+    background-color: #eee;
+}
+
+#config_raw, #bibtex_raw {
+    width: 100%;
+    height: 500px;
+    font-family: monospace;
+    font-size: 10pt;
+    display: block;
+}
+
+#submit {
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    border-style: none;
+}
+
+tr,th {
+    border-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+td {
+    padding: 5px 0;
+    vertical-align: top;
+}
+
+tr:nth-child(even) {
+    background-color: #eee;
+}
+
+h1 {
+    font-size: 14pt;
+}
+
+.msg {
+    background-color: #8f8;
+    font-style: italic;
+    padding:10px 0;
+}
+
+textarea {
+    width: 500px;
+    height: 200px;
+}
+
+input[type="text"] {
+    width: 99%;
+}
+
+label {
+    margin:0 20px 0 5px;
+}
+
+.exp {
+    width: 99%;
+}
+
+.nexp {
+    white-space:nowrap
+}
+
+.taglinks a {
+    background-color:#ccc;
+    padding:5px;
+    margin:2px 1px;
+    display:inline-block;
+}
+
+.taglinks {
+    min-width: 200px;
+}
