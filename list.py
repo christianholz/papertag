@@ -81,8 +81,8 @@ def nice_dt(d):
         return str(d.seconds / 60) + " minute" + "s" * (d.seconds >= 120)
     return "now"
     
-cnt = 0
 now = datetime.datetime.utcnow()
+render = []
 for item in papers:
     m = tagdb.get_meta(item['pid'])
     if (not filtered or m[0] == user) and (m[3] >= done):
@@ -94,18 +94,21 @@ for item in papers:
             unf = ' style="background-color:#aaa"'
         else:
             unf = ''
-        cnt += 1
-        print '''<tr>
-        <td class="exp">%s</td>
-        <td class="nexp"%s><a href="https://dx.doi.org/%s">link</a></td>
-        <td class="nexp"%s><a href="edit.py?user=%s&pid=%s">edit</a></td>
-        <td class="nexp"%s%s>%s</td>
-        <td class="nexp"%s>%s</td>
-        <td class="nexp"%s>%s</td>
-        <td class="nexp"%s>%s</td>
-    </tr>''' % (item['title'], unf, item['doi'], unf, user, item['pid'], bgc, unf, m[0], unf, nice_dt(now - m[2]), unf, m[1], unf, config['done'][m[3]])
+        render.append([item, unf, bgc, m[0], m[1], nice_dt(now - m[2]), config['done'][m[3]]])
 
-if cnt == 0:
+render.sort(key=lambda x:x[0]['title'])
+for r in render:
+    print '''<tr>
+    <td class="exp">%s</td>
+    <td class="nexp"%s><a href="https://dx.doi.org/%s">link</a></td>
+    <td class="nexp"%s><a href="edit.py?user=%s&pid=%s">edit</a></td>
+    <td class="nexp"%s%s>%s</td>
+    <td class="nexp"%s>%s</td>
+    <td class="nexp"%s>%s</td>
+    <td class="nexp"%s>%s</td>
+</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], user, r[0]['pid'], r[2], r[1], r[3], r[1], r[5], r[1], r[4], r[1], r[6])
+
+if len(render) == 0:
     print '''<tr>
     <td class="exp" style="font-style:italic;text-align:center">no papers to show</td>
     <td class="nexp"></td>

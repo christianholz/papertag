@@ -56,8 +56,8 @@ def save_file(fname, raw):
     if fc[1] == '.bib':
         b = bibtexparser.parse_lines(raw.split('\n'))
         d = bibtexparser.duplicate(b)
-        if d:
-            return "duplicate entry " + d
+        if len(d[0]) or len(d[1]):
+            return "duplicate(s):<br/>key(s): " + ", ".join([v[0] for v in d[0]]) + "<br/>title(s): " + ", ".join([v[1] for v in d[1]])
     fcopy(path_prefix + fname, path_prefix + 'backup/' + fc[0] + '-' + datetime.datetime.utcnow().strftime("%Y%m%d-%H%M%S") + fc[1])
     open(path_prefix + fname, 'w').write(raw)
 

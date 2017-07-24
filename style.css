@@ -59,6 +59,12 @@ h1 {
     padding:10px 0;
 }
 
+.emsg {
+    background-color: #f88;
+    font-style: italic;
+    padding:10px 0;
+}
+
 textarea {
     width: 99%;
     height: 200px;

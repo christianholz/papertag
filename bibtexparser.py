@@ -40,10 +40,16 @@ def parse_lines(ls):
 
 
 def duplicate(items):
-    keys = []
+    skeys = []
+    stitl = []
+    dupl = []
+    dtit = []
     for it in items:
-        if it['pid'] in keys:
-            return it['pid']
-        keys.append(it['pid'])
-    return None
+        if it['pid'].lower() in skeys:
+            dupl.append([it['pid'], it['title']])
+        if it['title'].lower() in stitl:
+            dtit.append([it['pid'], it['title']])
+        skeys.append(it['pid'].lower())
+        stitl.append(it['title'].lower())
+    return (dupl, dtit)
 
