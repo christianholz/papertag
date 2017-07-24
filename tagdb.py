@@ -57,7 +57,12 @@ def save_file(fname, raw):
         b = bibtexparser.parse_lines(raw.split('\n'))
         d = bibtexparser.duplicate(b)
         if len(d[0]) or len(d[1]):
-            return "duplicate(s):<br/>key(s): " + ", ".join([v[0] for v in d[0]]) + "<br/>title(s): " + ", ".join([v[1] for v in d[1]])
+            s = ""
+            if len(d[0]):
+                s += "duplicate key%s: " % ("s" * (len(d[0]) != 1)) + ", ".join([v[0] for v in d[0]]) + "<br/>"
+            if len(d[1]):
+                s += "duplicate title%s: " % ("s" * (len(d[0]) != 1)) + ", ".join([v[1] for v in d[1]]) + "<br/>"
+            return s
     fcopy(path_prefix + fname, path_prefix + 'backup/' + fc[0] + '-' + datetime.datetime.utcnow().strftime("%Y%m%d-%H%M%S") + fc[1])
     open(path_prefix + fname, 'w').write(raw)
 
