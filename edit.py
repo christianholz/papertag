@@ -56,6 +56,8 @@ print '''<!DOCTYPE html>
 %s
 <h1>%s</h1>
 <a href="https://dx.doi.org/%s">doi link</a>
+<br/>
+<br/>
 <form action="edit.py?user=%s&pid=%s" method="post">
 <table>
 <tr>
@@ -108,7 +110,6 @@ for j, cb in enumerate(config['done']):
     else:
         view_cb.append('<input type="radio" name="pid_done" id="pid_done_%d" value="%d"><label for="pid_done_%s">%s</label>' % (j, j, j, cb))
 
-
 print '''<tr>
     <td>done</td>
     <td>%s</td>
@@ -118,5 +119,4 @@ print '''<tr>
 <input type="submit" id="submit" name="submit" value="submit tags"/>
 </form>
 </body>
-</html>
-''' % (''.join(view_cb))
+</html>''' % (''.join(view_cb))

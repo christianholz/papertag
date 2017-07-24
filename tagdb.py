@@ -9,8 +9,8 @@ import datetime
 import bibtexparser
 
 
-# path_prefix = ''
-path_prefix = 'cgi-bin/'
+path_prefix = ''
+# path_prefix = 'cgi-bin/'
 
 extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done']
 tagdb_config = None
@@ -58,7 +58,7 @@ def save_file(fname, raw):
         d = bibtexparser.duplicate(b)
         if d:
             return "duplicate entry " + d
-    fcopy(path_prefix + fname, path_prefix + 'backup/' + fc[0] + '-' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + fc[1])
+    fcopy(path_prefix + fname, path_prefix + 'backup/' + fc[0] + '-' + datetime.datetime.utcnow().strftime("%Y%m%d-%H%M%S") + fc[1])
     open(path_prefix + fname, 'w').write(raw)
 
 
@@ -80,7 +80,7 @@ def load_paper(pid):
 
 
 def save_paper(pid, data, user):
-    data['pid_access'] = time.mktime(datetime.datetime.now().timetuple())
+    data['pid_access'] = time.mktime(datetime.datetime.utcnow().timetuple())
     data['pid_user'] = user
     f = open(path_prefix + 'tags/' + md5.md5(pid).hexdigest() + '.json', 'w')
     json.dump(data, f)

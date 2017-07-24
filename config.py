@@ -37,9 +37,7 @@ print '''<!DOCTYPE html>
 <link href="style.css" rel="stylesheet" />
 </head>
 <body>
-''' % (ed_tp[1])
-
-print '''<nav><a href="list.py?user=%s">&lt; list</a></nav>''' % (user)
+<nav><a href="list.py?user=%s">&lt; list</a></nav>''' % (ed_tp[1], user)
 
 if 'submit' in form.keys():
     msg = tagdb.save_file(ed_tp[0], form.getvalue('config_raw'))
