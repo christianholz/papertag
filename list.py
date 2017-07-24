@@ -24,7 +24,10 @@ else:
     done = 1
 
 filtered = 'filter' in form and int(form.getvalue('filter'))
-
+if 'sort' in form:
+    sort = form.getvalue('sort')
+else:
+    sort = 'title'
 
 papers = tagdb.parse_bibtex()
 
@@ -59,14 +62,14 @@ print '''<!DOCTYPE html>
 <h1>All papers</h1>
 <table>
 <tr>
-    <th class="exp">title</th>
-    <th class="nexp">doi</th>
+    <th class="exp"><a href="?user=%s&filter=%d&done=%d&sort=title">title</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=doi">doi</a></th>
     <th class="nexp">action</th>
-    <th class="nexp">assigned</th>
-    <th class="nexp">last change</th>
-    <th class="nexp">last user</th>
-    <th class="nexp">progress</th>
-</tr>''' % (sm, ' | '.join(view_cb), edit_cb)
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=3">assigned</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=5">last change</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=4">last user</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=7">progress</a></th>
+</tr>''' % (sm, ' | '.join(view_cb), edit_cb, user, int(filtered), done, user, int(filtered), done, user, int(filtered), done, user, int(filtered), done, user, int(filtered), done, user, int(filtered), done)
 
 def nice_dt(d):
     if d.days >= 500:
@@ -94,9 +97,12 @@ for item in papers:
             unf = ' style="background-color:#aaa"'
         else:
             unf = ''
-        render.append([item, unf, bgc, m[0], m[1], nice_dt(now - m[2]), config['done'][m[3]]])
+        render.append([item, unf, bgc, m[0], m[1], m[2], nice_dt(now - m[2]), config['done'][m[3]]])
 
-render.sort(key=lambda x:x[0]['title'])
+if len(sort) == 1:
+    render.sort(key=lambda x:x[int(sort)])
+else:
+    render.sort(key=lambda x:x[0][sort])
 for r in render:
     print '''<tr>
     <td class="exp">%s</td>
@@ -106,7 +112,7 @@ for r in render:
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
-</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], user, r[0]['pid'], r[2], r[1], r[3], r[1], r[5], r[1], r[4], r[1], r[6])
+</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], user, r[0]['pid'], r[2], r[1], r[3], r[1], r[6], r[1], r[4], r[1], r[7])
 
 if len(render) == 0:
     print '''<tr>
