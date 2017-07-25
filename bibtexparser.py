@@ -28,10 +28,10 @@ def parse_lines(ls):
                     })
                     break
                 l = ls[i].strip(' ,')
-                if l.startswith('title'):
+                if l.lower().startswith('title'):
                     e = l.index('=')
                     title = l[e+1:].strip(' {},\r\n')
-                if l.startswith('doi'):
+                if l.lower().startswith('doi'):
                     e = l.index('=')
                     doi = l[e+1:].strip(' {},\r\n')
             j = i + 1

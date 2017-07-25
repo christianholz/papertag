@@ -103,3 +103,14 @@ def auth(form):
         return False
     return user
 
+
+def init_assignment(user, offset=0):
+    if tagdb_config == None:
+        load_config()
+    b = parse_bibtex()
+    for j, p in enumerate(b):
+        d = load_paper(p['pid'])
+        d['pid_done'] = 1
+        d['pid_assigned'] = tagdb_config['users'][(j + offset) % len(tagdb_config['users'])]
+        save_paper(p['pid'], d, user)
+

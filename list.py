@@ -30,6 +30,11 @@ else:
     sort = 'title'
 
 papers = tagdb.parse_bibtex()
+msg = ""
+
+if 'init' in form and int(form.getvalue('init')) > 0:
+    tagdb.init_assignment(user, int(form.getvalue('init')))
+    msg = "papers reset and reassigned"
 
 view_cb = []
 for j, cb in enumerate(config['done']):
@@ -58,8 +63,13 @@ print '''<!DOCTYPE html>
 <link href="style.css" rel="stylesheet" />
 </head>
 <body>
-<nav>%s | view progress: %s<div style="float:right">%s</div></nav>
-<h1>All papers</h1>
+<nav>%s | view progress: %s<div style="float:right">%s | <a href="?user=%s&init=1" onclick="javascript:return confirm('(re)initialize assignments?');">initialize assignments</a></div></nav>
+''' % (sm, ' | '.join(view_cb), edit_cb, user)
+
+if msg != "":
+    print '''<div class="msg">%s</div>''' % (msg)
+
+print '''<h1>All papers</h1>
 <table>
 <tr>
     <th class="exp"><a href="?user=%s&filter=%d&done=%d&sort=title">title</a></th>
@@ -69,7 +79,8 @@ print '''<!DOCTYPE html>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=5">last change</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=4">last user</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=7">progress</a></th>
-</tr>''' % (sm, ' | '.join(view_cb), edit_cb, user, int(filtered), done, user, int(filtered), done, user, int(filtered), done, user, int(filtered), done, user, int(filtered), done, user, int(filtered), done)
+</tr>''' % (user, int(filtered), done, user, int(filtered), done, user, int(filtered), done,
+            user, int(filtered), done, user, int(filtered), done, user, int(filtered), done)
 
 def nice_dt(d):
     if d.days >= 500:
