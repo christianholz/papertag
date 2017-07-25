@@ -63,7 +63,7 @@ print '''<!DOCTYPE html>
 <link href="style.css" rel="stylesheet" />
 </head>
 <body>
-<nav>%s | view progress: %s<div style="float:right">%s | <a href="?user=%s&init=1" onclick="javascript:return confirm('(re)initialize assignments?');">initialize assignments</a></div></nav>
+<nav>%s | view progress: %s<div style="float:right">%s | <form method="post" name="reinit" action="?user=%s" style="display:inline"><input type="hidden" name="init" value="1"><a href="#" onclick="javascript:if(confirm('(re)initialize assignments?'))document.forms['reinit'].submit();return false;">initialize assignments</a></form></div></nav>
 ''' % (sm, ' | '.join(view_cb), edit_cb, user)
 
 if msg != "":

@@ -34,7 +34,7 @@ def parse_lines(ls):
                 if l.lower().startswith('doi'):
                     e = l.index('=')
                     doi = l[e+1:].strip(' {},\r\n')
-            j = i + 1
+            j = i
         j += 1
     return items
 
