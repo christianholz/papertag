@@ -21,7 +21,7 @@ if not user:
 if 'done' in form:
     done = int(form.getvalue('done'))
 else:
-    done = 1
+    done = -1
 
 filtered = 'filter' in form and int(form.getvalue('filter'))
 if 'sort' in form:
@@ -36,17 +36,20 @@ if 'init' in form and int(form.getvalue('init')) > 0:
     tagdb.init_assignment(user, int(form.getvalue('init')))
     msg = "papers reset and reassigned"
 
-view_cb = []
-for j, cb in enumerate(config['done']):
-    if done == j:
-        view_cb.append('%s and up' % (cb))
-    else:
-        view_cb.append('<a href="?user=%s&filter=%s&done=%d">%s%s</a>' % (user, int(filtered), j, cb, " and up" * (j != len(config['done']) - 1)))
-
 if filtered:
     sm = '<a href="?user=%s&done=%d">view all papers</a>' % (user, done)
 else:
     sm = '<a href="?user=%s&filter=1&done=%s">view papers assigned to me</a>' % (user, done)
+
+if done < 0:
+    view_cb = ['all']
+else:
+    view_cb = ['<a href="?user=%s&filter=%d&done=-1">all</a>' % (user, filtered)]
+for j, cb in enumerate(config['done']):
+    if done == j:
+        view_cb.append(cb)
+    else:
+        view_cb.append('<a href="?user=%s&filter=%d&done=%d">%s</a>' % (user, filtered, j, cb))
 
 edit_cb = []
 for j, cb in enumerate(config['edit']):
@@ -69,18 +72,6 @@ print '''<!DOCTYPE html>
 if msg != "":
     print '''<div class="msg">%s</div>''' % (msg)
 
-print '''<h1>All papers</h1>
-<table>
-<tr>
-    <th class="exp"><a href="?user=%s&filter=%d&done=%d&sort=title">title</a></th>
-    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=doi">doi</a></th>
-    <th class="nexp">action</th>
-    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=3">assigned</a></th>
-    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=5">last change</a></th>
-    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=4">last user</a></th>
-    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=7">progress</a></th>
-</tr>''' % (user, int(filtered), done, user, int(filtered), done, user, int(filtered), done,
-            user, int(filtered), done, user, int(filtered), done, user, int(filtered), done)
 
 def nice_dt(d):
     if d.days >= 500:
@@ -94,22 +85,46 @@ def nice_dt(d):
     if d.seconds >= 60:
         return str(d.seconds / 60) + " minute" + "s" * (d.seconds >= 120)
     return "now"
-    
+
+
 now = datetime.datetime.utcnow()
 render = []
+mecnt = 0;
 for item in papers:
     m = tagdb.get_meta(item['pid'])
-    if (not filtered or m[0] == user) and (m[3] >= done):
+    if (filtered == 0 or m[0] == user) and (m[3] == done or done < 0):
         if m[0] == '':
             bgc = ' style="background-color:#fcc"'
         else:
             bgc = ''
         if m[0] == user:
             unf = ' style="background-color:#aaa"'
+            mecnt += 1
         else:
             unf = ''
         render.append([item, unf, bgc, m[0], m[1], m[2], nice_dt(now - m[2]), config['done'][m[3]]])
 
+if done < 0:
+    assigned = '''%d papers in total''' % (len(render))
+else:
+    assigned = '''%d <em>%s</em> papers assigned to %s (%d total papers)''' % (mecnt, config['done'][done], user, len(render))
+
+print '''<h1>All papers</h1>
+<div class="info">%s</div>
+<table>
+<tr>
+    <th class="exp"><a href="?user=%s&filter=%d&done=%d&sort=title">title</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=doi">doi</a></th>
+    <th class="nexp">action</th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=3">assigned</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=5">last change</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=4">last user</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=7">progress</a></th>
+</tr>''' % (assigned,
+            user, filtered, done, user, filtered, done, user, filtered, done,
+            user, filtered, done, user, filtered, done, user, filtered, done)
+
+    
 if len(sort) == 1:
     render.sort(key=lambda x:x[int(sort)])
 else:

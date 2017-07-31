@@ -33,7 +33,7 @@ ed_tp = config['edit'][edit]
 print '''<!DOCTYPE html>
 <html>
 <head>
-<title>edit %s</title>
+<title>Edit %s</title>
 <link href="style.css" rel="stylesheet" />
 </head>
 <body>

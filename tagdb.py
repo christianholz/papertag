@@ -46,13 +46,34 @@ def load_config():
     return tagdb_config
 
 
+def check_unique(recs, field, recursive=-1, keys=[], dupl=[]):
+    for r in recs:
+        if r[field] in keys:
+            dupl.append(r[field])
+        else:
+            keys.append(r[field])
+        if recursive >= 0:
+            check_unique(r[recursive], field, recursive, keys, dupl)
+    return dupl
+            
+
 def save_file(fname, raw):
     global tagdb_config
-    fc = os.path.splitext(fname)
+    fc = os.path.split(fname)[-1]
+    fc = os.path.splitext(fc)
     if not fname in [v[0].lower() for v in tagdb_config['edit']] or fc[1].lower() == '.py':
         return "file not in edit list"
     if fc[1] == '.json':
-        t = json.loads(raw)
+        try:
+            t = json.loads(raw)
+        except ValueError as e:
+            return e.message
+        except:
+            return "JSON parsing exception"
+        if fc[0] == 'config':
+            dupl = check_unique(t['fields'], 0, 4)
+            if len(dupl):
+                return "duplicate key%s: " % ("s" * (len(dupl) != 1)) + ", ".join(dupl) + "<br/>"
     if fc[1] == '.bib':
         b = bibtexparser.parse_lines(raw.split('\n'))
         d = bibtexparser.duplicate(b)

@@ -48,8 +48,13 @@ if paper == None:
 print '''<!DOCTYPE html>
 <html>
 <head>
-<title>Edit %s</title>
+<title>Tag %s</title>
 <link href="style.css" rel="stylesheet" />
+<script>
+function swap(f,v,r) {
+    e=document.getElementById(f);if(r){if(e.value){e.value+='; ';}e.value+=v;}else{e.value=v;}return false;
+}
+</script>
 </head>
 <body>
 <nav><a href="list.py?user=%s">&lt; list</a></nav>
@@ -68,7 +73,7 @@ print '''<!DOCTYPE html>
 
 pdata = tagdb.load_paper(pid)
 
-def gen_field(st, indent=0):
+def gen_field(st, indent=0, ap=1):
     for s in st:
         # ["contrib", "Main contribution", "line", [], []],
         if s[2] == 'line':
@@ -79,7 +84,7 @@ def gen_field(st, indent=0):
             ed = ''
         dv = []
         for v in s[3]:
-            dv.append('<a href="#" onclick="javascript:document.getElementById(\'%s\').value=\'%s\';return false;">%s</a>' % (s[0], v, v))
+            dv.append('<a href="#" onclick="javascript:return swap(\'%s\', \'%s\', %d);">%s</a>' % (s[0], v, ap, v))
         print '''<tr>
     <td class="nexp" style="padding-left:%dpx">%s</td>
     <td class="exp">%s</td>
@@ -96,7 +101,7 @@ print '''<tr>
 </tr>''' % (''.join(paper['bibtex']))
 
 gen_field(config['fields'])
-gen_field([['pid_assigned', "Assigned to", 'line', config['users'], []]])
+gen_field([['pid_assigned', "Assigned to", 'line', config['users'], []]], 0, 0)
 
 if 'pid_done' in pdata:
     done = int(pdata['pid_done'])
