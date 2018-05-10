@@ -8,15 +8,22 @@ import tagdb
 import datetime
 
 
-print "Content-type: text/html\r\n"
-
-
 config = tagdb.load_config()
 form = cgi.FieldStorage()
 user = tagdb.auth(form)
 if not user:
     print '''error: user'''
     sys.exit(-1)
+
+
+if 'createzip' in form and int(form.getvalue('createzip')) > 0:
+    filename = tagdb.createzip(user)
+    print "Status: 303 See other"
+    print "Location: %s" % (filename)
+    print #empty line to indicate end of header
+
+#content type declaration after the potential redirect
+print "Content-type: text/html\r\n"
 
 if 'done' in form:
     done = int(form.getvalue('done'))
@@ -66,8 +73,10 @@ print '''<!DOCTYPE html>
 <link href="style.css" rel="stylesheet" />
 </head>
 <body>
-<nav>%s | view progress: %s<div style="float:right">%s | <form method="post" name="reinit" action="?user=%s" style="display:inline"><input type="hidden" name="init" value="1"><a href="#" onclick="javascript:if(confirm('(re)initialize assignments?'))document.forms['reinit'].submit();return false;">initialize assignments</a></form></div></nav>
-''' % (sm, ' | '.join(view_cb), edit_cb, user)
+<nav>%s | view progress: %s<div style="float:right">%s 
+| <form method="post" name="reinit" action="?user=%s" style="display:inline"><input type="hidden" name="init" value="1"><a href="#" onclick="javascript:if(confirm('(re)initialize assignments?'))document.forms['reinit'].submit();return false;">initialize assignments</a></form> 
+| <form method="post" name="download" action="?user=%s" style="display:inline"><input type="hidden" name="createzip" value="1"><a href="#" onclick="javascript:if(confirm('Re-create zip and download?'))document.forms['download'].submit();return false;">Download tags</a></form></div></nav>
+''' % (sm, ' | '.join(view_cb), edit_cb, user, user )
 
 if msg != "":
     print '''<div class="msg">%s</div>''' % (msg)

@@ -7,7 +7,7 @@ import md5
 import time
 import datetime
 import bibtexparser
-
+import zipfile
 
 path_prefix = ''
 # path_prefix = 'cgi-bin/'
@@ -135,3 +135,15 @@ def init_assignment(user, offset=0):
         d['pid_assigned'] = tagdb_config['users'][(j + offset) % len(tagdb_config['users'])]
         save_paper(p['pid'], d, user)
 
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file))
+
+def createzip(user):
+    filename = 'download-for-'+user+'.zip'
+    zipf = zipfile.ZipFile(filename, 'w', zipfile.ZIP_DEFLATED)
+    zipdir(path_prefix + 'tags/', zipf)
+    zipf.close()
+    return filename
