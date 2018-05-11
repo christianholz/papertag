@@ -9,10 +9,10 @@ import datetime
 import bibtexparser
 
 
-path_prefix = ''
-# path_prefix = 'cgi-bin/'
+# path_prefix = ''
+path_prefix = 'cgi-bin/'
 
-extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done']
+extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done', 'pid_ago']
 tagdb_config = None
 
 
@@ -30,11 +30,14 @@ def parse_bibtex():
 def get_meta(pid):
     try:
         f = open(path_prefix + 'tags/' + md5.md5(pid).hexdigest() + '.json')
-    except IOError:
-        return ['', '', datetime.datetime(2000, 1, 1), 1]
-    j = json.load(f)
+        j = json.load(f)
+    except:
+        ag = datetime.datetime.utcnow() - datetime.datetime(2000, 1, 1)
+        return ['', '', datetime.datetime(2000, 1, 1), 1, ag.days * 24 * 60 * 60 + ag.seconds]
     f.close()
     j['pid_access'] = datetime.datetime.fromtimestamp(j['pid_access'])
+    d = datetime.datetime.utcnow() - j['pid_access']
+    j['pid_ago'] = d.days * 24 * 60 * 60 + d.seconds
     j['pid_done'] = int(j['pid_done'])
     j = [j.get(v, '') for v in extra_fields]
     return j
@@ -98,9 +101,9 @@ def load_file_raw(fname):
 def load_paper(pid):
     try:
         f = open(path_prefix + 'tags/' + md5.md5(pid).hexdigest() + '.json')
-    except IOError:
+        j = json.load(f)
+    except:
         return {}
-    j = json.load(f)
     f.close()
     return j
 

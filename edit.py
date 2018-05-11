@@ -48,7 +48,7 @@ if paper == None:
 print '''<!DOCTYPE html>
 <html>
 <head>
-<title>Tag %s</title>
+<title>Edit %s</title>
 <link href="style.css" rel="stylesheet" />
 <script>
 function swap(f,v,r) {

@@ -6,6 +6,7 @@ import cgi
 import json
 import tagdb
 import datetime
+import urllib
 
 
 print "Content-type: text/html\r\n"
@@ -102,7 +103,7 @@ for item in papers:
             mecnt += 1
         else:
             unf = ''
-        render.append([item, unf, bgc, m[0], m[1], m[2], nice_dt(now - m[2]), config['done'][m[3]]])
+        render.append([item, unf, bgc, m[0], m[1], m[2], nice_dt(now - m[2]), config['done'][m[3]], m[4]])
 
 if done < 0:
     assigned = '''%d papers in total''' % (len(render))
@@ -110,14 +111,15 @@ else:
     assigned = '''%d <em>%s</em> papers assigned to %s (%d total papers)''' % (mecnt, config['done'][done], user, len(render))
 
 print '''<h1>All papers</h1>
-<div class="info">%s</div>
+<div class="info">%s</div><br/>
 <table>
 <tr>
     <th class="exp"><a href="?user=%s&filter=%d&done=%d&sort=title">title</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=doi">doi</a></th>
+    <th class="nexp">scholar</th>
     <th class="nexp">action</th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=3">assigned</a></th>
-    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=5">last change</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=8">last change</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=4">last user</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=7">progress</a></th>
 </tr>''' % (assigned,
@@ -130,15 +132,17 @@ if len(sort) == 1:
 else:
     render.sort(key=lambda x:x[0][sort])
 for r in render:
+    scholar = urllib.quote(r[0]['title'] + ' ' + r[0]['doi'])
     print '''<tr>
     <td class="exp">%s</td>
     <td class="nexp"%s><a href="https://dx.doi.org/%s">link</a></td>
+    <td class="nexp"%s><a href="https://scholar.google.com/scholar?hl=en&q=%s&btnG=">scholar</a></td>
     <td class="nexp"%s><a href="edit.py?user=%s&pid=%s">edit</a></td>
     <td class="nexp"%s%s>%s</td>
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
-</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], user, r[0]['pid'], r[2], r[1], r[3], r[1], r[6], r[1], r[4], r[1], r[7])
+</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], scholar, r[1], user, r[0]['pid'], r[2], r[1], r[3], r[1], r[6], r[1], r[4], r[1], r[7])
 
 if len(render) == 0:
     print '''<tr>
