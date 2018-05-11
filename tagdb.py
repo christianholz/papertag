@@ -9,8 +9,8 @@ import datetime
 import bibtexparser
 import zipfile
 
-# path_prefix = ''
-path_prefix = 'cgi-bin/'
+path_prefix = ''
+# path_prefix = 'cgi-bin/'
 
 extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done', 'pid_ago']
 tagdb_config = None
