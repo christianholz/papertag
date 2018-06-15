@@ -174,8 +174,14 @@ print '''
 <h1>Summary</h1>
 <table id="summary">
   <tr><th class="summary_left"></th>''' + ''.join(['<th>%s</th>' % s for s in config['done']]) + '''<th>touched</th><th>total</th></tr>'''
+ptc = 0
+ptt = 0
 for un in sorted(auth_stat.keys(), key=lambda x:sum(auth_stat[x]) - auth_stat[x][1], reverse=True):
+    ptc += sum(auth_stat[un]) - auth_stat[un][1]
+    ptt += sum(auth_stat[un])
     print '  <tr><td class="summary_left">%s</td>' % un + ''.join(['<td>%d</td>' % i for i in auth_stat[un]]) + '<td>%d</td><td>%d</td></tr>' % (sum(auth_stat[un]) - auth_stat[un][1], sum(auth_stat[un]))
+print '  <tr style="background-color:#aaa"><td class="summary_left">sum</td>' + ''.join(['<td>%d</td>' % sum([v[i] for v in auth_stat.values()]) for i in range(len(config['done']))]) + '<td>%d</td><td>%d</td></tr>' % (ptc, ptt)
 print '''</table>
+<p>%.1f%% of papers touched.</p>
 </body>
-</html>'''
+</html>''' % (ptc * 100.0 / ptt)
