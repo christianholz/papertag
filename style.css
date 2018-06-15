@@ -97,3 +97,17 @@ label {
     min-width: 200px;
 }
 
+#summary {
+    width:inherit;
+}
+
+#summary th, #summary td {
+    padding-left:5px;
+    padding-right:5px;
+    text-align:right;
+}
+
+.summary_left {
+    text-align:right;
+    font-weight:bold;
+}

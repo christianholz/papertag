@@ -100,8 +100,12 @@ def nice_dt(d):
 now = datetime.datetime.utcnow()
 render = []
 mecnt = 0;
+auth_stat = {}
 for item in papers:
     m = tagdb.get_meta(item['pid'])
+    if not m[0] in auth_stat:
+        auth_stat[m[0]] = [0] * len(config['done'])
+    auth_stat[m[0]][m[3]] += 1
     if (filtered == 0 or m[0] == user) and (m[3] == done or done < 0):
         if m[0] == '':
             bgc = ' style="background-color:#fcc"'
@@ -166,5 +170,12 @@ if len(render) == 0:
 
 print '''
 </table>
+<br/><br/>
+<h1>Summary</h1>
+<table id="summary">
+  <tr><th class="summary_left"></th>''' + ''.join(['<th>%s</th>' % s for s in config['done']]) + '''<th>touched</th><th>total</th></tr>'''
+for un in sorted(auth_stat.keys()):
+    print '  <tr><td class="summary_left">%s</td>' % un + ''.join(['<td>%d</td>' % i for i in auth_stat[un]]) + '<td>%d</td><td>%d</td></tr>' % (sum(auth_stat[un]) - auth_stat[un][1], sum(auth_stat[un]))
+print '''</table>
 </body>
 </html>'''
