@@ -22,6 +22,7 @@ if 'createzip' in form and int(form.getvalue('createzip')) > 0:
     print "Status: 303 See other"
     print "Location: %s" % (filename)
     print #empty line to indicate end of header
+    exit()
 
 #content type declaration after the potential redirect
 print "Content-type: text/html\r\n"
