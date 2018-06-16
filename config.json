@@ -10,7 +10,7 @@
     ], 
     "users": [
         "user1", 
-        "user2", 
+        "user2"
     ],
     "done": [
         "trash", "not done", "tagged", "reviewed", "complete"
