@@ -7,6 +7,7 @@ import json
 import tagdb
 import datetime
 import urllib
+print("Content-Type: text/html\r\n")
 
 
 config = tagdb.load_config()
