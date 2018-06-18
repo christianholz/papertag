@@ -16,6 +16,10 @@ nav {
     background-color: #eee;
 }
 
+.info {
+    line-height: 12pt;
+}
+
 #config_raw, #bibtex_raw {
     width: 100%;
     height: 500px;
