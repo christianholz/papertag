@@ -76,7 +76,7 @@ print '''<!DOCTYPE html>
 <body>
 <nav>%s | view progress: %s<div style="float:right">%s 
 | <form method="post" name="reinit" action="?user=%s" style="display:inline"><input type="hidden" name="init" value="1"><a href="#" onclick="javascript:if(confirm('(re)initialize assignments?'))document.forms['reinit'].submit();return false;">initialize assignments</a></form> 
-| <form method="post" name="download" action="?user=%s" style="display:inline"><input type="hidden" name="createzip" value="1"><a href="#" onclick="javascript:if(confirm('Re-create zip and download?'))document.forms['download'].submit();return false;">Download tags</a></form></div></nav>
+| <form method="post" name="download" action="?user=%s" style="display:inline"><input type="hidden" name="createzip" value="1"><a href="#" onclick="javascript:if(confirm('Re-create zip and download?'))document.forms['download'].submit();return false;">download tag data</a></form></div></nav>
 ''' % (sm, ' | '.join(view_cb), edit_cb, user, user )
 
 if msg != "":
@@ -99,7 +99,8 @@ def nice_dt(d):
 
 now = datetime.datetime.utcnow()
 render = []
-mecnt = 0;
+mecnt = 0
+ptc = 0
 auth_stat = {}
 for item in papers:
     m = tagdb.get_meta(item['pid'])
@@ -107,6 +108,7 @@ for item in papers:
         auth_stat[m[0]] = [0] * len(config['done'])
     auth_stat[m[0]][m[3]] += 1
     if (filtered == 0 or m[0] == user) and (m[3] == done or done < 0):
+        if m[3] != 1: ptc += 1
         if m[0] == '':
             bgc = ' style="background-color:#fcc"'
         else:
@@ -119,12 +121,14 @@ for item in papers:
         render.append([item, unf, bgc, m[0], m[1], m[2], nice_dt(now - m[2]), config['done'][m[3]], m[4]])
 
 if done < 0:
-    assigned = '''%d papers in total''' % (len(render))
+    assigned = '''%d papers in total (%.0f%% touched)''' % (len(render), 100.0 * ptc / len(render))
 else:
     assigned = '''%d <em>%s</em> papers assigned to %s (%d total papers)''' % (mecnt, config['done'][done], user, len(render))
 
 print '''<h1>All papers</h1>
-<div class="info">%s</div><br/>
+<div class="info">%s<br/>
+<a href="#leaderboard">detailed breakdown</a></div>
+<br/><br/>
 <table>
 <tr>
     <th class="exp"><a href="?user=%s&filter=%d&done=%d&sort=title">title</a></th>
@@ -139,7 +143,7 @@ print '''<h1>All papers</h1>
             user, filtered, done, user, filtered, done, user, filtered, done,
             user, filtered, done, user, filtered, done, user, filtered, done)
 
-    
+ptc = len(papers) - sum([v[1] for v in auth_stat.values()])
 if len(sort) == 1:
     render.sort(key=lambda x:x[int(sort)])
 else:
@@ -171,17 +175,13 @@ if len(render) == 0:
 print '''
 </table>
 <br/><br/>
-<h1>Summary</h1>
+<h1 id="leaderboard">Summary</h1>
+<div class="info">%.0f%% of all papers touched</div><br/>
 <table id="summary">
-  <tr><th class="summary_left"></th>''' + ''.join(['<th>%s</th>' % s for s in config['done']]) + '''<th>touched</th><th>total</th></tr>'''
-ptc = 0
-ptt = 0
+  <tr><th class="summary_left"></th>''' % (ptc * 100.0 / len(papers)) + ''.join(['<th>%s</th>' % s for s in config['done']]) + '''<th>touched</th><th>total</th></tr>'''
 for un in sorted(auth_stat.keys(), key=lambda x:sum(auth_stat[x]) - auth_stat[x][1], reverse=True):
-    ptc += sum(auth_stat[un]) - auth_stat[un][1]
-    ptt += sum(auth_stat[un])
     print '  <tr><td class="summary_left">%s</td>' % un + ''.join(['<td>%d</td>' % i for i in auth_stat[un]]) + '<td>%d</td><td>%d</td></tr>' % (sum(auth_stat[un]) - auth_stat[un][1], sum(auth_stat[un]))
-print '  <tr style="background-color:#aaa"><td class="summary_left">sum</td>' + ''.join(['<td>%d</td>' % sum([v[i] for v in auth_stat.values()]) for i in range(len(config['done']))]) + '<td>%d</td><td>%d</td></tr>' % (ptc, ptt)
+print '  <tr style="background-color:#aaa"><td class="summary_left">sum</td>' + ''.join(['<td>%d</td>' % sum([v[i] for v in auth_stat.values()]) for i in range(len(config['done']))]) + '<td>%d</td><td>%d</td></tr>' % (ptc, len(papers))
 print '''</table>
-<p>%.1f%% of papers touched.</p>
 </body>
-</html>''' % (ptc * 100.0 / ptt)
+</html>'''
