@@ -115,3 +115,38 @@ label {
     text-align:right;
     font-weight:bold;
 }
+
+
+
+
+.dropzone {
+    width: 100%;
+    height: 50px;
+    border: 2px dashed #ccc;
+    color: #333;
+    line-height: 50px;
+    text-align: center;
+}
+
+.dropzone.dragover {
+    border-color: #000;
+    color: #000;
+}
+
+.upload-result{
+    padding: 2px;
+}
+
+.upload-success{
+    background: greenyellow;
+    border: solid 1px green;
+    color: black;
+}
+.upload-error{
+    background: firebrick;
+    border: solid 1px darkred;
+    color: white;
+}
+#file_form{
+    display: none;
+}
