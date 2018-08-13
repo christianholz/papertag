@@ -1,19 +1,152 @@
 {
     "fields": [
-        [ "contrib", "Main contribution", "box", [], [] ],
-        [ "tracking", "Category example", "none", [], [
-                [ "modality", "Tracking modality", "line", [ "audio", "camera" ], [] ],
-                [ "modality_extra", "Tracking modality extra", "line", [], [] ],
-                [ "accuracy", "Tracking accuracy", "line", [], [] ]
-        ]], 
-        [ "users", "User count", "line", [ "one", "two", "many" ], [] ]
+        ["contribution", "Contribution of paper", "line",
+            ["Tracking technology", "Interaction techniques", "Display/Visualization technique", "Review paper", "Study, deployment", "Study (human factors)", "Theory", "System", "Use-case, application", "Toolkit, middleware"],
+            []
+        ],
+        ["contribution_desc", "Contribution of paper description", "box",
+            [],
+            []
+        ],
+        ["crossdevice_def", "Definition of cross-device interaction (quotes)", "box",
+            [],
+            []
+        ],
+        ["deployment", "Deployment for study", "line",
+            ["None", "Lab study", "UX study", "In-the-wild study", "Fixed, semi-fixed, mobile (also depends on setup time)"],
+            []
+        ],
+        ["unsolved", "Unsolved problems", "line",
+            [],
+            []
+        ],
+        ["focus", "Hardware/software focus (check both if both apply)", "line",
+            ["Hardware", "Software"],
+            []
+        ],
+        ["evaluation", "Type of evaluation", "line",
+            ["None", "Heuristic evaluation (criteria)", "Technical evaluation (e.g., runtime, roundtrip)", "Technical performance (speed)", "Quality measurements (e.g., accuracy of tracking)", "User study (qualitative)", "User study (quantitative, controlled lab experiment)", "Focus group", "Deployment with users", "Deployment with developers"],
+            []
+        ],
+        ["target_users", "Target users", "line",
+            ["Individual", "Group work", "Expert users"],
+            []
+        ],
+        ["devices_included", "Device type included", "line",
+            ["Any screen device", "Phone", "Tablet", "Smart watch", "Public display", "Whiteboard, large vertical display", "Tabletop, large horizontal display", "Tangibles", "Laptop", "Desktop computer", "TV"],
+            []
+        ],
+        ["device_models", "Device models (e.g., Samsung Galaxy SII or Kinect v2", "line",
+            [],
+            []
+        ],
+        ["user_device_rel", "User <--> Device relationship", "line",
+            ["1 person to n devices", "n people to m devices"],
+            []
+        ],
+        ["tracking_tech", "Tracking technology ", "line",
+            ["None", "Acoustic signals", "Radio", "BLE", "Optical", "Camera-based tracking", "Marker-based IR Tracking", "Fiducials", "Optitrack", "Vicon", "Markerless IR Tracking", "structured light", "time of flight", "Kinect", "DepthSense 3D", "Mechanical", "Magnetic", "IMU", "Network", "Static setup", "Manual"],
+            []
+        ],
+        ["tracking_characteristic", "Tracking characteristic (cross-table with Person, Device, Environment)", "line",
+            ["Inside-out tracking", "Outside-in tracking", "Positioning left/right", "Proximity", "Multiple screens", "Same space/network", "Relative location", "Direction", "Location 2D", "Location 3D", "Orientation", "Identity", "Distance only ", "Tracking users only", "Tracking devices only", "Tracking users and devices"],
+            []
+        ],
+        ["tracking_fidelity", "Tracking fidelity", "none", [], [
+            ["tracking_accuracy", "Accuracy", "line",
+                [],
+                []
+            ],
+            ["tracking_reliability", "Reliability (e.g., how does it handle occlusion)", "line",
+                [],
+                []
+            ],
+            ["tracking_range", "Range", "line",
+                [],
+                []
+            ],
+            ["tracking_rate", "Update rate", "line",
+                [],
+                []
+            ]
+            ]
+        ],
+        ["connection_classification", "Connection classification", "line",
+            ["P2P", "Via remote server", "Local master device"],
+            []
+        ],
+        ["network_infrastructure", "Network infrastructure", "line",
+            ["Internet", "Bluetooth", "WiFi", "Audio"],
+            []
+        ],
+        ["toolkits", "Any toolkits, frameworks or software packages used", "line",
+            ["NodeJS", "Javascript", "HTML5", "academic toolkits"],
+            []
+        ],
+        ["input_modalities", "Manual user input modalities", "line",
+            ["Touch", "Keyboard", "Mouse", "3D gestures", "Speech"],
+            []
+        ],
+        ["output_modalities", "Output modalities", "line",
+            ["Screen output", "Audio output", "Speech"],
+            []
+        ],
+        ["scale", "Scale", "line",
+            ["Near, personal space", "Social space", "Room", "Buildings", "Location-agnostic"],
+            []
+        ],
+        ["device_mount", "Device mount (multiple choice)", "line",
+            ["Handheld", "Placed loosely around user (e.g., table)", "Roaming (e.g., on robot, robotic arm)", "Mounted to wall", "Mounted to tripod to float in space"],
+            []
+        ],
+        ["interaction_techniques", "Interaction Techniques", "line",
+            ["Data transfer/sharing", "Visualisation", "Data exploration", "UI distribution", "Cross-device task chaining", "Conduit gestures", "Remote control", "Session continuation"],
+            []
+        ],
+        ["use_cases", "Application use cases categories", "line",
+            ["Education", "Knowledge workers", "Entertainment", "None"],
+            []
+        ],
+        ["use_cases_desc", "Application use cases description", "box",
+            [],
+            []
+        ],
+        ["fabrication", "Fabrication involved (holders, mounts, ...)", "line",
+            [],
+            []
+        ],
+        ["additional_hardware", "Hardware used in addition to devices", "line",
+            [],
+            []
+        ],
+        ["cost", "Cost (hardware/software)", "line",
+            [],
+            []
+        ],
+        ["rating", "Rating (for the purpose of using it in our taxonomy)", "line",
+            ["1*", "2**", "3***", "4****", "5*****"],
+            []
+        ],
+        ["papertype", "Paper type", "line",
+            ["Full paper", "Journal Article", "Note", "Demo", "Poster", "Workshop", "DC"],
+            []
+        ],
+        ["contentlength", "Content length in pages (without refs)", "line",
+            [],
+            []
+        ]
     ], 
     "users": [
-        "user1", 
-        "user2"
+        "cholz", 
+        "nmarquardt", 
+        "shouben", 
+        "rraedle",
+        "cklokmose",
+        "fbrudy",
+        "cwu"
     ],
     "done": [
-        "trash", "not done", "tagged", "reviewed", "complete"
+        "trash", "not tagged", "tagged", "reviewed", "complete", "outside of scope"
     ],
     "edit": [
         ["all.bib", "bibtex"],
@@ -21,3 +154,49 @@
         ["style.css", "CSS"]
     ]
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
