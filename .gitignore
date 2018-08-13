@@ -104,6 +104,7 @@ ENV/
 
 /tags
 /backup
+/files
 
 all.bib
 config.json
