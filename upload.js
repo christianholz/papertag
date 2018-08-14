@@ -57,7 +57,6 @@ function upload_files(files) {
             progressBar.style.display = 'none';
         }
 
-        console.log(xhr.response);
         upload_results.innerHTML = this.response;
     };
 
@@ -65,7 +64,6 @@ function upload_files(files) {
       if (e.lengthComputable) {
           progressBar.max = e.total;
           progressBar.value = e.loaded;
-        console.log("add upload event-listener" + e.loaded + "/" + e.total);
       }
       else{
           upload_results.innerHTML = 'Uploading...';
