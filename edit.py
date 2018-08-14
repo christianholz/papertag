@@ -75,6 +75,7 @@ window.tag_uploadPath = '/upload.py?user=%s&pid=%s';
 <div id="dropzone_element" class="dropzone">
 Drop files here to upload. Existing files will be overwritten without confirmation!
 </div>
+<progress value="0" max="100" id="upload_progress"></progress> 
 <div id="upload_results_element"></div>
 <br/>
 <br/>
