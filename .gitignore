@@ -102,3 +102,9 @@ ENV/
 
 .DS_Store
 
+/tags
+/backup
+/files
+
+all.bib
+config.json

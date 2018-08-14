@@ -5,6 +5,7 @@ import sys
 import cgi
 import json
 import tagdb
+import md5
 
 
 print "Content-type: text/html\r\n"
@@ -45,6 +46,11 @@ if paper == None:
     print '''error: paper not found'''
     sys.exit(-1)
 
+if os.path.isfile('files/'+md5.md5(pid).hexdigest()+'.pdf'):
+    uploadlink = '''<a href="/files/%s.pdf">PDF download</a>''' % md5.md5(pid).hexdigest()
+else:
+    uploadlink = 'No PDF'
+
 print '''<!DOCTYPE html>
 <html>
 <head>
@@ -54,13 +60,25 @@ print '''<!DOCTYPE html>
 function swap(f,v,r) {
     e=document.getElementById(f);if(r){if(e.value){e.value+='; ';}e.value+=v;}else{e.value=v;}return false;
 }
+window.tag_uploadPath = '/upload.py?user=%s&pid=%s';
 </script>
+<script src="/upload.js"></script>
 </head>
 <body>
 <nav><a href="list.py?user=%s">&lt; list</a></nav>
 %s
 <h1>%s</h1>
-<a href="https://dx.doi.org/%s">doi link</a>
+<a href="https://dx.doi.org/%s">doi link</a> | %s
+<br/>
+<br/>
+<form enctype="multipart/form-data" action="upload.py?user=%s&pid=%s" method="post" id="file_form">
+<p>File: <input type="file" name="file"></p>
+<p><input type="submit" value="Upload" name="s"></p>
+</form>
+<div id="dropzone_element" class="dropzone">
+Drop files here to upload. Existing files will be overwritten without confirmation!
+</div>
+<div id="upload_results_element"></div>
 <br/>
 <br/>
 <form action="edit.py?user=%s&pid=%s" method="post">
@@ -69,7 +87,7 @@ function swap(f,v,r) {
     <th class="nexp">field</th>
     <th class="exp">value</th>
     <th class="taglinks">default values</th>
-</tr>''' % (paper['title'], user, msg, paper['title'], paper['doi'], user, pid)
+</tr>''' % (paper['title'],  user, pid, user, msg, paper['title'], paper['doi'], uploadlink, user, pid, user, pid)
 
 pdata = tagdb.load_paper(pid)
 

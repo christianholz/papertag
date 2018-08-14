@@ -52,4 +52,3 @@ def duplicate(items):
         skeys.append(it['pid'].lower())
         stitl.append(it['title'].lower())
     return (dupl, dtit)
-
