@@ -13,6 +13,7 @@ config = tagdb.load_config()
 form = cgi.FieldStorage()
 user = tagdb.auth(form)
 if not user:
+    print "Content-type: text/html\r\n"
     print '''error: user'''
     sys.exit(-1)
 
