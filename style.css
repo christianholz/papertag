@@ -151,7 +151,7 @@ label {
     display: none;
 }
 #upload_progress{
-    /*display: none;*/
+    display: none;
     width: 100%;
     margin: 1em 0;
 }
