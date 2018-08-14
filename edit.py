@@ -46,10 +46,7 @@ if paper == None:
     print '''error: paper not found'''
     sys.exit(-1)
 
-if os.path.isfile('files/'+md5.md5(pid).hexdigest()+'.pdf'):
-    uploadlink = '''<a href="/files/%s.pdf">PDF download</a>''' % md5.md5(pid).hexdigest()
-else:
-    uploadlink = 'No PDF'
+uploadlink = tagdb.get_pdf_link(pid);
 
 print '''<!DOCTYPE html>
 <html>
