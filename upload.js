@@ -38,9 +38,12 @@ function createDropzoneMethods() {
 }
 
 function upload_files(files) {
-    let upload_results = document.getElementById("upload_results_element");
+    let upload_results = document.getElementById("upload_results_element"),
+        progressBar = document.getElementById("upload_progress");
     let formData = new FormData(),
         xhr = new XMLHttpRequest();
+
+    progressBar.style.display = 'block';
 
     console.log("Dropped " + String(files.length) + " files.");
     for(let i=0; i < files.length; i++) {
@@ -50,13 +53,24 @@ function upload_files(files) {
     formData.append("file-upload", 'Upload');
 
     xhr.onreadystatechange = function() {
-        // if(xhr.readyState === XMLHttpRequest.DONE) {
-        //     alert(xhr.responseText);
-        // }
+        if(xhr.readyState === XMLHttpRequest.DONE) {
+            progressBar.style.display = 'none';
+        }
 
         console.log(xhr.response);
         upload_results.innerHTML = this.response;
     };
+
+    xhr.upload.addEventListener("progress", function(e){
+      if (e.lengthComputable) {
+          progressBar.max = e.total;
+          progressBar.value = e.loaded;
+        console.log("add upload event-listener" + e.loaded + "/" + e.total);
+      }
+      else{
+          upload_results.innerHTML = 'Uploading...';
+      }
+    }, false);
 
     console.log("Let's upload files: ", formData);
     xhr.open('POST', window.tag_uploadPath, true); // async = true

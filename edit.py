@@ -46,10 +46,7 @@ if paper == None:
     print '''error: paper not found'''
     sys.exit(-1)
 
-if os.path.isfile('files/'+md5.md5(pid).hexdigest()+'.pdf'):
-    uploadlink = '''<a href="/files/%s.pdf">PDF download</a>''' % md5.md5(pid).hexdigest()
-else:
-    uploadlink = 'No PDF'
+uploadlink = tagdb.get_pdf_link(pid);
 
 print '''<!DOCTYPE html>
 <html>
@@ -78,6 +75,7 @@ window.tag_uploadPath = '/upload.py?user=%s&pid=%s';
 <div id="dropzone_element" class="dropzone">
 Drop files here to upload. Existing files will be overwritten without confirmation!
 </div>
+<progress value="0" max="100" id="upload_progress"></progress> 
 <div id="upload_results_element"></div>
 <br/>
 <br/>

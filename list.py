@@ -13,6 +13,7 @@ config = tagdb.load_config()
 form = cgi.FieldStorage()
 user = tagdb.auth(form)
 if not user:
+    print "Content-type: text/html\r\n"
     print '''error: user'''
     sys.exit(-1)
 
@@ -136,6 +137,7 @@ print '''<h1>All papers</h1>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=doi">doi</a></th>
     <th class="nexp">scholar</th>
     <th class="nexp">action</th>
+    <th class="nexp">PDF</th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=3">assigned</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=8">last change</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=4">last user</a></th>
@@ -151,20 +153,23 @@ else:
     render.sort(key=lambda x:x[0][sort])
 for r in render:
     scholar = urllib.quote(r[0]['title'] + ' ' + r[0]['doi'])
+    pdf = tagdb.get_pdf_link(r[0]['pid'])
     print '''<tr>
     <td class="exp">%s</td>
     <td class="nexp"%s><a href="https://dx.doi.org/%s">link</a></td>
     <td class="nexp"%s><a href="https://scholar.google.com/scholar?hl=en&q=%s&btnG=">scholar</a></td>
     <td class="nexp"%s><a href="edit.py?user=%s&pid=%s">edit</a></td>
+    <td class="nexp">%s</td>
     <td class="nexp"%s%s>%s</td>
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
-</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], scholar, r[1], user, r[0]['pid'], r[2], r[1], r[3], r[1], r[6], r[1], r[4], r[1], r[7])
+</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], scholar, r[1], user, r[0]['pid'], pdf, r[2], r[1], r[3], r[1], r[6], r[1], r[4], r[1], r[7])
 
 if len(render) == 0:
     print '''<tr>
     <td class="exp" style="font-style:italic;text-align:center">no papers to show</td>
+    <td class="nexp"></td>
     <td class="nexp"></td>
     <td class="nexp"></td>
     <td class="nexp"></td>

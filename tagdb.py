@@ -10,6 +10,7 @@ import bibtexparser
 import zipfile
 
 path_prefix = ''
+pdf_path_prefix = 'files/'
 # path_prefix = 'cgi-bin/'
 
 extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done', 'pid_ago']
@@ -41,6 +42,17 @@ def get_meta(pid):
     j['pid_done'] = int(j['pid_done'])
     j = [j.get(v, '') for v in extra_fields]
     return j
+
+
+def has_pdf_attached(pid):
+    return os.path.isfile(pdf_path_prefix + md5.md5(pid).hexdigest() + '.pdf')
+
+
+def get_pdf_link(pid):
+    if has_pdf_attached(pid):
+        return '''<a href="/files/%s.pdf">Download</a>''' % md5.md5(pid).hexdigest()
+    else:
+        return 'No PDF'
 
 
 def load_config():
@@ -150,3 +162,4 @@ def createzip(user):
     zipdir(path_prefix + 'tags/', zipf)
     zipf.close()
     return filename
+
