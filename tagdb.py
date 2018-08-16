@@ -9,9 +9,12 @@ import datetime
 import bibtexparser
 import zipfile
 
+
 path_prefix = ''
 pdf_path_prefix = 'files/'
-# path_prefix = 'cgi-bin/'
+if os.environ['REMOTE_ADDR'] == '127.0.0.1':
+    path_prefix = 'cgi-bin/'
+
 
 extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done', 'pid_ago']
 tagdb_config = None
@@ -50,9 +53,9 @@ def has_pdf_attached(pid):
 
 def get_pdf_link(pid):
     if has_pdf_attached(pid):
-        return '''<a href="/files/%s.pdf">Download</a>''' % md5.md5(pid).hexdigest()
+        return '''<a href="/files/%s.pdf">download</a>''' % md5.md5(pid).hexdigest()
     else:
-        return 'No PDF'
+        return 'no PDF'
 
 
 def load_config():
