@@ -159,12 +159,12 @@ for r in render:
     <td class="nexp"%s><a href="https://dx.doi.org/%s">link</a></td>
     <td class="nexp"%s><a href="https://scholar.google.com/scholar?hl=en&q=%s&btnG=">scholar</a></td>
     <td class="nexp"%s><a href="edit.py?user=%s&pid=%s">edit</a></td>
-    <td class="nexp">%s</td>
+    <td class="nexp"%s>%s</td>
     <td class="nexp"%s%s>%s</td>
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
-</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], scholar, r[1], user, r[0]['pid'], pdf, r[2], r[1], r[3], r[1], r[6], r[1], r[4], r[1], r[7])
+</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], scholar, r[1], user, r[0]['pid'], r[1], pdf, r[2], r[1], r[3], r[1], r[6], r[1], r[4], r[1], r[7])
 
 if len(render) == 0:
     print '''<tr>
