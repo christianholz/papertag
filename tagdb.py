@@ -12,8 +12,8 @@ import zipfile
 
 path_prefix = ''
 pdf_path_prefix = 'files/'
-if os.environ['REMOTE_ADDR'] == '127.0.0.1':
-    path_prefix = 'cgi-bin/'
+#if os.environ['REMOTE_ADDR'] == '127.0.0.1':
+#    path_prefix = 'cgi-bin/'
 
 
 extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done', 'pid_ago']
