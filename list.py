@@ -38,6 +38,10 @@ if 'sort' in form:
     sort = form.getvalue('sort')
 else:
     sort = 'title'
+if 'order' in form:
+    sort_rev = form.getvalue('order') == 'reversed'
+else:
+    sort_rev = False
 
 papers = tagdb.parse_bibtex()
 msg = ""
@@ -47,9 +51,9 @@ if 'init' in form and int(form.getvalue('init')) > 0:
     msg = "papers reset and reassigned"
 
 if filtered:
-    sm = '<a href="?user=%s&done=%d">view all papers</a>' % (user, done)
+    sm = '<a href="?user=%s&done=%d">show all</a>' % (user, done)
 else:
-    sm = '<a href="?user=%s&filter=1&done=%s">view papers assigned to me</a>' % (user, done)
+    sm = '<a href="?user=%s&filter=1&done=%s">show my assignments</a>' % (user, done)
 
 if done < 0:
     view_cb = ['all']
@@ -76,7 +80,7 @@ print '''<!DOCTYPE html>
 <link href="style.css" rel="stylesheet" />
 </head>
 <body>
-<nav>%s | view progress: %s<div style="float:right">%s 
+<nav>%s | show: %s<div style="float:right">%s 
 | <form method="post" name="reinit" action="?user=%s" style="display:inline"><input type="hidden" name="init" value="1"><a href="#" onclick="javascript:if(confirm('(re)initialize assignments?'))document.forms['reinit'].submit();return false;">initialize assignments</a></form> 
 | <form method="post" name="download" action="?user=%s" style="display:inline"><input type="hidden" name="createzip" value="1"><a href="#" onclick="javascript:if(confirm('Re-create zip and download?'))document.forms['download'].submit();return false;">download tag data</a></form></div></nav>
 ''' % (sm, ' | '.join(view_cb), edit_cb, user, user )
@@ -120,7 +124,7 @@ for item in papers:
             mecnt += 1
         else:
             unf = ''
-        render.append([item, unf, bgc, m[0], m[1], m[2], nice_dt(now - m[2]), config['done'][m[3]], m[4]])
+        render.append([item, unf, bgc, m[0], m[1], m[2], nice_dt(now - m[2]), config['done'][m[3]], m[4], m[5], m[6]])
 
 if done < 0:
     assigned = '''%d papers in total (%.0f%% touched)''' % (len(render), 100.0 * ptc / len(render))
@@ -142,18 +146,23 @@ print '''<h1>All papers</h1>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=8">last change</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=4">last user</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=7">progress</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=9&order=reversed">rate</a></th>
 </tr>''' % (assigned,
             user, filtered, done, user, filtered, done, user, filtered, done,
-            user, filtered, done, user, filtered, done, user, filtered, done)
+            user, filtered, done, user, filtered, done, user, filtered, done,
+            user, filtered, done)
 
 ptc = len(papers) - sum([v[1] for v in auth_stat.values()])
 if len(sort) == 1:
-    render.sort(key=lambda x:x[int(sort)])
+    render.sort(key=lambda x:x[int(sort)], reverse=sort_rev)
 else:
-    render.sort(key=lambda x:x[0][sort])
+    render.sort(key=lambda x:x[0][sort], reverse=sort_rev)
 for r in render:
     scholar = urllib.quote(r[0]['title'] + ' ' + r[0]['doi'])
-    pdf = tagdb.get_pdf_link(r[0]['pid'])
+    if r[10] == '':
+      pdf = 'no PDF'
+    else:
+      pdf = '<a href="%s">download</a>' % r[10]
     print '''<tr>
     <td class="exp">%s</td>
     <td class="nexp"%s><a href="https://dx.doi.org/%s">link</a></td>
@@ -164,7 +173,8 @@ for r in render:
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
     <td class="nexp"%s>%s</td>
-</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], scholar, r[1], user, r[0]['pid'], r[1], pdf, r[2], r[1], r[3], r[1], r[6], r[1], r[4], r[1], r[7])
+    <td class="nexp"%s>%s</td>
+</tr>''' % (r[0]['title'], r[1], r[0]['doi'], r[1], scholar, r[1], user, r[0]['pid'], r[1], pdf, r[2], r[1], r[3], r[1], r[6], r[1], r[4], r[1], r[7], r[1], r[9])
 
 if len(render) == 0:
     print '''<tr>
