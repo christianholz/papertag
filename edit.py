@@ -6,6 +6,7 @@ import cgi
 import json
 import tagdb
 import md5
+import urllib
 
 
 print "Content-type: text/html\r\n"
@@ -65,7 +66,7 @@ window.tag_uploadPath = '/upload.py?user=%s&pid=%s';
 <nav><a href="list.py?user=%s">&lt; list</a></nav>
 %s
 <h1>%s</h1>
-<a href="https://dx.doi.org/%s">doi link</a> | %s
+<a href="https://dx.doi.org/%s">doi link</a> | <a href="%s">scholar link</a> | %s
 <br/>
 <br/>
 <form enctype="multipart/form-data" action="upload.py?user=%s&pid=%s" method="post" id="file_form">
@@ -85,7 +86,7 @@ Drop files here to upload. Existing files will be overwritten without confirmati
     <th class="nexp">field</th>
     <th class="exp">value</th>
     <th class="taglinks">default values</th>
-</tr>''' % (paper['title'],  user, pid, user, msg, paper['title'], paper['doi'], uploadlink, user, pid, user, pid)
+</tr>''' % (paper['title'],  user, pid, user, msg, paper['title'], paper['doi'], urllib.quote(paper['title'] + ' ' + paper['doi']), uploadlink, user, pid, user, pid)
 
 pdata = tagdb.load_paper(pid)
 
