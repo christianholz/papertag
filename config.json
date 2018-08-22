@@ -150,7 +150,7 @@
     ],
     "edit": [
         ["all.bib", "bibtex"],
-        ["config.json", "configuration"],
+        ["config.json", "config"],
         ["style.css", "CSS"]
     ]
 }

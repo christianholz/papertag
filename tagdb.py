@@ -16,7 +16,7 @@ if os.environ['REMOTE_ADDR'] == '127.0.0.1':
     path_prefix = 'cgi-bin/'
 
 
-extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done', 'pid_ago']
+extra_fields = ['pid_assigned', 'pid_user', 'pid_access', 'pid_done', 'pid_ago', 'pid_rating', 'pid_pdf']
 tagdb_config = None
 
 
@@ -43,19 +43,13 @@ def get_meta(pid):
     d = datetime.datetime.utcnow() - j['pid_access']
     j['pid_ago'] = d.days * 24 * 60 * 60 + d.seconds
     j['pid_done'] = int(j['pid_done'])
+    j['pid_rating'] = j.get('rating', ' ')[0]
+    if os.path.isfile(path_prefix + pdf_path_prefix + md5.md5(pid).hexdigest() + '.pdf'):
+      j['pid_pdf'] = '/files/%s.pdf' % md5.md5(pid).hexdigest()
+    else:
+      j['pid_pdf'] = ''
     j = [j.get(v, '') for v in extra_fields]
     return j
-
-
-def has_pdf_attached(pid):
-    return os.path.isfile(pdf_path_prefix + md5.md5(pid).hexdigest() + '.pdf')
-
-
-def get_pdf_link(pid):
-    if has_pdf_attached(pid):
-        return '''<a href="/files/%s.pdf">download</a>''' % md5.md5(pid).hexdigest()
-    else:
-        return 'no PDF'
 
 
 def load_config():
