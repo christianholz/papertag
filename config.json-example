@@ -1,0 +1,23 @@
+{
+    "fields": [
+        [ "contrib", "Main contribution", "box", [], [] ],
+        [ "tracking", "Category example", "none", [], [
+                [ "modality", "Tracking modality", "line", [ "audio", "camera" ], [] ],
+                [ "modality_extra", "Tracking modality extra", "line", [], [] ],
+                [ "accuracy", "Tracking accuracy", "line", [], [] ]
+        ]],
+        [ "users", "User count", "line", [ "one", "two", "many" ], [] ]
+    ],
+    "users": [
+        "user1",
+        "user2"
+    ],
+    "done": [
+        "trash", "not done", "tagged", "reviewed", "complete"
+    ],
+    "edit": [
+        ["all.bib", "bibtex"],
+        ["config.json", "configuration"],
+        ["style.css", "CSS"]
+    ]
+}
