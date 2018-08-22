@@ -47,7 +47,11 @@ if paper == None:
     print '''error: paper not found'''
     sys.exit(-1)
 
-uploadlink = tagdb.get_pdf_link(pid);
+m = tagdb.get_meta(paper['pid'])
+if m[6] == '':
+    pdf = 'no PDF'
+else:
+    pdf = '<a href="%s">download</a>' % m[6]
 
 print '''<!DOCTYPE html>
 <html>
@@ -86,7 +90,7 @@ Drop files here to upload. Existing files will be overwritten without confirmati
     <th class="nexp">field</th>
     <th class="exp">value</th>
     <th class="taglinks">default values</th>
-</tr>''' % (paper['title'],  user, pid, user, msg, paper['title'], paper['doi'], urllib.quote(paper['title'] + ' ' + paper['doi']), uploadlink, user, pid, user, pid)
+</tr>''' % (paper['title'],  user, pid, user, msg, paper['title'], paper['doi'], urllib.quote(paper['title'] + ' ' + paper['doi']), pdf, user, pid, user, pid)
 
 pdata = tagdb.load_paper(pid)
 
