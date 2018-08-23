@@ -146,7 +146,7 @@ print '''<h1>All papers</h1>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=8">last change</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=4">last user</a></th>
     <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=7">progress</a></th>
-    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=9&order=reversed">rate</a></th>
+    <th class="nexp"><a href="?user=%s&filter=%d&done=%d&sort=9&order=reversed">rating</a></th>
 </tr>''' % (assigned,
             user, filtered, done, user, filtered, done, user, filtered, done,
             user, filtered, done, user, filtered, done, user, filtered, done,

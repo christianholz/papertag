@@ -43,7 +43,9 @@ def get_meta(pid):
     d = datetime.datetime.utcnow() - j['pid_access']
     j['pid_ago'] = d.days * 24 * 60 * 60 + d.seconds
     j['pid_done'] = int(j['pid_done'])
-    j['pid_rating'] = j.get('rating', ' ')[0]
+    j['pid_rating'] = j.get('rating', '')
+    if len(j['pid_rating']) > 0:
+        j['pid_rating'] = j['pid_rating'][0]
     if os.path.isfile(path_prefix + pdf_path_prefix + md5.md5(pid).hexdigest() + '.pdf'):
       j['pid_pdf'] = '/files/%s.pdf' % md5.md5(pid).hexdigest()
     else:
