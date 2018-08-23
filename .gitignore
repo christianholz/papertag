@@ -108,3 +108,5 @@ ENV/
 
 all.bib
 config.json
+
+.idea
