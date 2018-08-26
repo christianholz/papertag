@@ -146,7 +146,7 @@
         "cwu"
     ],
     "done": [
-        "trash", "not tagged", "tagged", "reviewed", "complete", "outside of scope"
+        "trash", "not tagged", "tagged", "outside of scope"
     ],
     "edit": [
         ["all.bib", "bibtex"],

@@ -112,6 +112,7 @@ for item in papers:
     m = tagdb.get_meta(item['pid'])
     if not m[0] in auth_stat:
         auth_stat[m[0]] = [0] * len(config['done'])
+    m[3] = max(0, min(m[3], len(config['done']) - 1))
     auth_stat[m[0]][m[3]] += 1
     if (filtered == 0 or m[0] == user) and (m[3] == done or done < 0):
         if m[3] != 1: ptc += 1
@@ -179,6 +180,8 @@ for r in render:
 if len(render) == 0:
     print '''<tr>
     <td class="exp" style="font-style:italic;text-align:center">no papers to show</td>
+    <td class="nexp"></td>
+    <td class="nexp"></td>
     <td class="nexp"></td>
     <td class="nexp"></td>
     <td class="nexp"></td>

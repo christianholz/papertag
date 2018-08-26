@@ -110,3 +110,5 @@ all.bib
 config.json
 
 .idea
+
+cgiserver.py
