@@ -166,7 +166,7 @@ for r in render:
       pdf = '<a href="%s">download</a>' % r[10]
     print '''<tr>
     <td class="exp">%s</td>
-    <td class="nexp"%s><a href="https://dx.doi.org/%s">link</a></td>
+    <td class="nexp"%s><a href="https://doi.org/%s">link</a></td>
     <td class="nexp"%s><a href="https://scholar.google.com/scholar?hl=en&q=%s&btnG=">scholar</a></td>
     <td class="nexp"%s><a href="edit.py?user=%s&pid=%s">edit</a></td>
     <td class="nexp"%s>%s</td>

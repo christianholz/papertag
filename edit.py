@@ -70,7 +70,7 @@ window.tag_uploadPath = '/upload.py?user=%s&pid=%s';
 <nav><a href="list.py?user=%s">&lt; list</a></nav>
 %s
 <h1>%s</h1>
-<a href="https://dx.doi.org/%s">doi link</a> | <a href="%s">scholar link</a> | %s
+<a href="https://doi.org/%s">doi link</a> | <a href="%s">scholar link</a> | %s
 <br/>
 <br/>
 <form enctype="multipart/form-data" action="upload.py?user=%s&pid=%s" method="post" id="file_form">
